@@ -1,11 +1,11 @@
-const mascaraMoeda = (event) => {
-  const onlyDigits = event.target.value
+const mascaraMoeda = (el) => {
+  const onlyDigits = el.value
     .split("")
     .filter(s => /\d/.test(s))
     .join("")
     .padStart(3, "0")
   const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
-  event.target.value = maskCurrency(digitsFloat)
+  el.value = maskCurrency(digitsFloat)
 }
 
 const maskCurrency = (valor, locale = 'pt-BR', currency = 'BRL') => {

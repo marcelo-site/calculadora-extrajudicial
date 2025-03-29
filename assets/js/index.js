@@ -48,14 +48,10 @@ const getEntry = (data) => {
 }
 
 const handleValueParcel = () => {
-    const numLote = +form.lote.value;
-    if (!numLote) return;
-
-    const lote = dataLotes[numLote - 1];
+    const lote = getLote()
     if (!lote) return;
 
     const entry = getEntry(true);
-
     let feesMonth = 0;
     let balanceDebtor = 0;
     valueFinance = lote.price - entry;
@@ -118,10 +114,10 @@ const handleSummaryJuro = () => {
     if (!lote) return;
 
     const qtyParcelValue = +form.qtyParcel.value;
-
     const entry = getEntry(true);
     const { totalPay, juros } = handleValueParcel()[qtyParcelValue - 2];
-    const valuePay = qtyParcelValue > 4 ? totalPay + entry : lote.price
+    const valuePay = qtyParcelValue > 4 ? totalPay + entry : lote.price;
+
     handleSummary(valuePay, juros, "juro");
 }
 
@@ -178,6 +174,20 @@ const handleMethod = (e) => {
     parent.querySelector("label").classList.add("active")
 }
 
+const handleEntry = () => {
+    const lote = getLote();
+    if (!lote) return;
+
+    const { price } = lote
+    const entry = form.entry
+    const value = entry.value.replace(/\D/g, "");
+
+    if (+value > price * 100) {
+        entry.value = price * 100
+    }
+    mascaraMoeda(entry);
+}
+
 loteEl.addEventListener("change", ({ target }) => {
     const numLote = +target.value;
     if (numLote) {
@@ -191,27 +201,23 @@ loteEl.addEventListener("change", ({ target }) => {
             emptyValues();
             return;
         }
-
         valueTitle.innerHTML = formatPrice(lote.price);
         form.price.value = lote.price;
         const parcelas = handleValueParcel();
+        handleEntry();
 
         parcelas.forEach((item, i) => {
             const { qty, valueParcel } = item;
-
             if (i === 0) {
                 const { value, discount } = handleDiscount(lote.price);
                 handleSummary(value, discount, "discount");
             }
-
             qtyParcel.innerHTML += `
             <option value="${qty}">${qty} parcelas de ${formatValue(valueParcel)}</option>`
         });
 
         qtyParcel.value = qtyParcelValue || 2
-        qtyParcel.addEventListener("change", ({ target }) => {
-            handleSummaryJuro();
-        })
+        qtyParcel.addEventListener("change", handleSummaryJuro)
 
         containerPayment.classList.remove("none");
         envProposit.classList.remove("none");
@@ -223,7 +229,7 @@ loteEl.addEventListener("change", ({ target }) => {
 });
 
 form.entry.addEventListener("input", (e) => {
-    mascaraMoeda(e);
+    handleEntry();
     calcular();
 });
 
