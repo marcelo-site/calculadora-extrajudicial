@@ -1,0 +1,316 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+:root {
+    --primary-color: #132ddb;
+    --border-color: rgba(0, 0, 0, 0.25);
+    --color-green: green;
+    --color-green: #28a757;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    line-height: 1.5em;
+    padding: 0px 5px 20px 5px;
+}
+
+#title-price {
+    background-color: #eee;
+    margin-bottom: 2rem;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#title-price i {
+    background: var(--primary-color);
+    font-size: 1.75rem;
+    color: white;
+    height: 3rem;
+    width: 3rem;
+    display: inline-flex;
+}
+
+main {
+    max-width: 960px;
+    margin-bottom: 3em;
+    overflow-x: hidden;
+}
+
+h1 {
+    margin: 1rem 0;
+    font-weight: 500;
+    font-size: 1.5rem;
+}
+
+button {
+    border: 0
+}
+
+form input:not(form input[type='radio']),
+form select {
+    width: calc(100vw - 10px);
+    max-width: 640px;
+}
+
+@media (max-width: 600px) {
+
+    form input,
+    form select,
+    .containerButtons {
+        width: calc(100% - 10px);
+    }
+}
+
+form input,
+form select {
+    background-color: #ffffffd1;
+    padding: 0.5em;
+    border-radius: 5px;
+    font-size: 1.25rem;
+    border: none;
+    box-shadow: 0px 0px 6px #0000001f;
+    border: 1px solid #0000002e;
+}
+
+form input:focus,
+form select:focus {
+    background-color: white;
+    outline: none;
+}
+
+form>div {
+    width: 100vw;
+    max-width: 640px;
+}
+
+form label {
+    display: block;
+    font-weight: 500;
+    font-size: 1em;
+    margin-bottom: .5rem;
+}
+
+.form-control {
+    margin: 1rem 0;
+}
+
+form button[type='submit'] {
+    margin-top: 3rem;
+}
+
+.btn {
+    margin: 10px 0;
+    padding: .4em .7em;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #eee;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.containerButtons {
+    display: flex;
+    gap: 1rem;
+}
+
+.containerButtons>div {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+}
+
+.none {
+    display: none !important;
+}
+
+#summary {
+    margin: 2rem 0;
+}
+
+#summary div span {
+    font-size: 1rem;
+}
+
+.qtyParcel {
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: .5rem;
+    padding-bottom: .5rem;
+    justify-content: space-between;
+    width: calc(100vw - 10px);
+    max-width: 640px;
+}
+
+.qtyParcel>span {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.75rem !important;
+    margin-right: 10px;
+}
+
+.totParcel {
+    margin-top: 1rem;
+    font-weight: 500;
+    font-size: 1.25rem;
+}
+
+.totParcel span {
+    color: var(--color-green);
+    font-size: 1.25rem !important;
+}
+
+footer {
+    position: fixed;
+    text-align: center;
+    background-color: #414242;
+    color: white;
+    padding: 0.5em;
+    bottom: 0;
+    width: 100vw;
+}
+
+footer a {
+    text-decoration: none;
+    color: #db7a16;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.btnZap {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--color-green);
+    color: white;
+    text-decoration: none;
+    font-size: 1.25rem;
+    border: 0;
+    padding: .75rem;
+}
+
+.targetOff span {
+    font-size: 1rem;
+}
+
+.targetOff :first-child {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-green);
+}
+
+.targetOff.red span:first-child {
+    color: red;
+}
+
+.targetOff :last-child {
+    padding-right: 4px;
+    background: var(--color-green);
+    color: white;
+    height: 2rem;
+    gap: 0;
+    background-color: transparent;
+}
+
+.targetOff i {
+    font-size: 20px;
+    background-color: transparent;
+    margin-right: -3px;
+    margin-top: 6px;
+}
+
+.targetOff.red i {
+    transform: rotateX(180deg);
+    margin-top: -6px;
+}
+
+.text-bottom {
+    font-size: 0.875rem;
+    margin-top: -10px;
+    font-weight: 400;
+}
+
+.modal {
+    position: fixed;
+    background: #00000087;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.modal>div {
+    background: white;
+    width: 90%;
+    max-height: 80%;
+    max-width: 640px;
+    padding: 1rem;
+    position: relative;
+    border-radius: 8px;
+    /* overflow-y: hidden; */
+    overflow-x: auto;
+}
+
+.modal button {
+    background-color: red;
+    color: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1.25rem;
+    padding: 3px 6px;
+    font-weight: 500;
+    border-top-right-radius: 8px;
+}
+
+.modal .title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.modal .title i {
+    background: yellow;
+    color: #040404;
+    padding: 8px;
+    margin-right: 8px;
+    border-radius: 5px;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: inline-flex;
+}
+
+.modal p {
+    font-size: 15px;
+    font-weight: 300;
+}
+
+.modal p i {
+    font-weight: 500;
+}

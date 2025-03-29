@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Amortizações</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/index.js" defer type="module"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/assets/manifest.json" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <main>
+        <h1 id="title-price">
+            <i class="bi bi-currency-dollar flex"></i>
+            <span id="value-title">R$ 0,00</span>
+        </h1>
+        <div class="form">
+            <form id="form">
+                <div>
+                    <div class="form-control">
+                        <!-- <label for="lote">Lote</label> -->
+                        <select name="lote" id="lote">
+                            <option value="">Selecione um lote</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="price" id="value">
+                    <div id="container-payment" class="none">
+                        <div style="font-weight: 500;">Forma de Pagamento</div>
+                        <div class="containerButtons">
+                            <div class="form-control">
+                                <label class="btn active" class="btn" for="vista">A vista</label>
+                                <input style="display: none;" type="radio" name="uniquePay" id="vista" value="1"
+                                    checked>
+                            </div>
+                            <div class="form-control">
+                                <label class="btn" for="installment">Parcelado</label>
+                                <input style="display: none;" type="radio" name="uniquePay" id="installment" value="0">
+                            </div>
+                        </div>
+                        <div id="container-installment" class="none">
+                            <div class="form-control">
+                                <label for="entry">Entrada?</label>
+                                <div class="entry">
+                                    <input type="text" name="entry" id="entry" value="R$ 1.000,00">
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="form-control">
+                                    <label for="">Quantas Parcelas?</label>
+                                    <select name="qtyParcel" id="qtyParcel">
+                                    </select>
+                                </div>
+                                <div class="text-bottom" style="font-size: 0.875rem;">Divida em até 4x sem juros</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="summary"></div>
+
+                <button class="btn btnZap none" type="submit">Enviar Proposta <i class="bi bi-whatsapp"></i></button>
+            </form>
+        </div>
+        <div>
+
+        </div>
+        <!-- <div style="overflow-x: auto;"> -->
+        <!-- <div> -->
+        <!-- <details>
+                    <summary>Detalhes</summary>
+                    <table class="none">
+                        <thead>
+                            <th>N<sup>o</sup></th>
+                            <th>Parcelas</th>
+                            <th>Amortizações</th>
+                            <th>Juros</th>
+                            <th>Saldo Devedor</th>
+                        </thead>
+                        <tbody id="result"></tbody>
+                    </table>
+                </details> -->
+        <!-- </div> -->
+        <!-- </div> -->
+    </main>
+
+    <div id="modal" class="modal flex">
+        <div>
+            <button>x</button>
+            <div class="title"><i class="bi bi-exclamation-triangle flex"></i>Atenção Leia</div>
+            <p>Faça sua simulação para um acordo extrajudicial de lote no denominado <i>Loteamento Maria Tavares</i>
+                negociado
+                pela
+                Imobiliaria <i>Paulo André Pereira Chaves Imobiliaria</i> que por ordem de decisão judicial suspendeu as
+                vendas do
+                corretor
+                no
+                referido loteamento.
+            </p>
+            <p>A simulação funciona indicando o lote que voçê negociou da referida Imobiliaria de Paulo Chaves e apos
+                deve
+                escolher as forma de pagamento e enviar a proposta clicando no botão indicado, os demais passos serão
+                informados
+                pelos proprietarios.</p>
+        </div>
+    </div>
+    <div id="notLote" class="modal flex none">
+        <div>
+            <button>x</button>
+            <div class="title"><i class="bi bi-exclamation-triangle flex"></i>Lote não disponível</div>
+            <p>Lote não disponivel entre em contato com os proprietários.</p>
+        </div>
+    </div>
+    <footer>
+        <p>Feito por <a href="https://www.facebook.com/profile.php?id=100015225941991" target="_blank">Marcelo</a>
+            &copy <span id="yearCopy"></span></p>
+    </footer>
+</body>
+
+</html>
