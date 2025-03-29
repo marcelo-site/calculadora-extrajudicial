@@ -30,4 +30,14 @@ const handleDiscount = (value) => {
 
 const calcularPercentagem = (parte, total) => (parte / total) * 100;
 
-export { formatValue, formatPrice, handleValueNum, handleDiscount, percentDiscount, calcularPercentagem }
+const handleURL = (key, param) => {
+  const path = window.location.toString();
+  let url = new URL(path);
+  let params = new URLSearchParams(url.search);
+  params.set(key, param);
+
+  history.replaceState({}, "", path.split("?")[0] + "?" + params);
+
+}
+
+export { formatValue, formatPrice, handleValueNum, handleDiscount, percentDiscount, calcularPercentagem, handleURL }

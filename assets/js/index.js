@@ -27,6 +27,12 @@ const maxParcel = 60;
 let valueParcel = 0;
 let valueFinance = 0;
 
+const showNumbers = document.querySelector("#show-numbers");
+const containerNumbers = document.querySelector("#container-numbers");
+const btnEnvProposit = containerNumbers.querySelectorAll(".btn");
+
+showNumbers.addEventListener("click", () => containerNumbers.classList.remove("none"));
+
 const getLote = () => {
     const numLote = +form.lote.value;
     if (!numLote) return;
@@ -36,13 +42,9 @@ const getLote = () => {
 
 const getEntry = (data) => {
     const entryValue = Number(form.entry.value.replace(/\D/g, "")) / 100;
-    if (data) {
-        return entryValue;
-    }
-    const uniquePayValue = form.uniquePay.value === "1";
-    const entry = uniquePayValue ? 0 : entryValue
+    if (data) return entryValue;
 
-    return entry
+    return form.uniquePay.value === "1" ? 0 : entryValue
 }
 
 const handleValueParcel = () => {
@@ -128,8 +130,6 @@ const calcular = () => {
     if (!numLote) return;
 
     const parcelas = handleValueParcel();
-    const entry = getEntry();
-
     const qtyParcelValue = form.qtyParcel.value;
     qtyParcel.innerHTML = ``
 
@@ -150,6 +150,7 @@ const emptyValues = () => {
 
 const handleMethod = (e) => {
     const valueMethod = e.target.value;
+
     const numLote = +form.lote.value;
     if (!numLote) return;
 
@@ -226,12 +227,12 @@ form.entry.addEventListener("input", (e) => {
     calcular();
 });
 
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const { lote, price, entry, qtyParcel, uniquePay } = e.target;
+const submit = (number) => {
+    // e.preventDefault();
+    const { lote, price, entry, qtyParcel, uniquePay } = form;
     const countParcels = uniquePay.value === "1" ? 1 : Number(qtyParcel.value);
     const dataParcel = handleValueParcel()[+qtyParcel.value - 2];
-    const data = dataLotes[+lote.value]
+    const data = dataLotes[+lote.value];
     const text = textProposit({
         lote: Number(lote.value),
         price: data.price,
@@ -241,7 +242,18 @@ form.addEventListener("submit", (e) => {
         valueParcel: dataParcel.valueParcel,
         entry: Number(entry.value.replace(/\D/g, "")) / 100,
     });
-    window.open(`https://wa.me/558191869812?text=${encodeURIComponent(text)}`, "_blank")
+    window.open(`https://wa.me/55${number}?text=${encodeURIComponent(text)}`, "_blank");
+}
+
+
+btnEnvProposit.forEach(item => {
+    item.addEventListener("click", (e) => {
+        submit(e.target.getAttribute("data-number"));
+    })
+})
+
+form.addEventListener("submit", (e) => {
+
 });
 
 const handleModal = (modalEl) => {
@@ -256,10 +268,11 @@ const handleModal = (modalEl) => {
 document.addEventListener("DOMContentLoaded", () => {
     handleModal(modal);
     handleModal(modalLoteNot);
+    handleModal(containerNumbers);
     uniquePay.forEach((item) => item.addEventListener("click", handleMethod));
 
-    const yearCopy = document.querySelector("#yearCopy");
-    yearCopy.innerHTML = (new Date()).getFullYear();
+    document.querySelector("#yearCopy").innerHTML = (new Date()).getFullYear();
+
     dataLotes.forEach(({ lote, available }) => {
         selectLote.innerHTML += `<option value="${lote}">Lote ${lote} ${!available ? "indisponivel" : ""}</option>`
     })
