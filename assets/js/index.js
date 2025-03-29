@@ -27,6 +27,13 @@ const maxParcel = 60;
 let valueParcel = 0;
 let valueFinance = 0;
 
+const getLote = () => {
+    const numLote = +form.lote.value;
+    if (!numLote) return;
+
+    return dataLotes[numLote - 1];
+}
+
 const getEntry = (data) => {
     const entryValue = Number(form.entry.value.replace(/\D/g, "")) / 100;
     if (data) {
@@ -104,6 +111,18 @@ const handleSummary = (price, variant, type) => {
     }
 }
 
+const handleSummaryJuro = () => {
+    const lote = getLote();
+    if (!lote) return;
+
+    const qtyParcelValue = +form.qtyParcel.value;
+
+    const entry = getEntry(true);
+    const { totalPay, juros } = handleValueParcel()[qtyParcelValue - 2];
+    const valuePay = qtyParcelValue > 4 ? totalPay + entry : lote.price
+    handleSummary(valuePay, juros, "juro");
+}
+
 const calcular = () => {
     const numLote = +form.lote.value;
     if (!numLote) return;
@@ -121,9 +140,7 @@ const calcular = () => {
     });
 
     qtyParcel.value = qtyParcelValue;
-    const { totalPay, juros } = handleValueParcel()[qtyParcelValue - 2];
-    const valuePay = totalPay + (+qtyParcelValue > 4 ? entry : 0)
-    handleSummary(valuePay, juros, "juro");
+    handleSummaryJuro();
 }
 
 const emptyValues = () => {
@@ -140,14 +157,11 @@ const handleMethod = (e) => {
     if (!lote) return;
 
     if (valueMethod === "0") {
-        installment.classList.remove("none");
-        const { totalPay, juros } = handleValueParcel()[0];
-        qtyParcel.value = form.qtyParcel.value || 2;
-        containerPayment.classList.remove("none");
-        const entry = getEntry(true);
         const qtyParcelValue = +form.qtyParcel.value;
-        const valuePay = qtyParcelValue > 4 ? totalPay + entry : lote.price
-        handleSummary(valuePay, juros, "juro");
+        installment.classList.remove("none");
+        qtyParcel.value = qtyParcelValue || 2;
+        containerPayment.classList.remove("none");
+        handleSummaryJuro();
     }
     else {
         emptyValues();
@@ -195,11 +209,7 @@ loteEl.addEventListener("change", ({ target }) => {
 
         qtyParcel.value = qtyParcelValue || 2
         qtyParcel.addEventListener("change", ({ target }) => {
-            const { totalPay, juros } = handleValueParcel()[+target.value - 2];
-            const entry = getEntry(true);
-            const qtyParcelValue = form.qtyParcel.value;
-            const valuePay = qtyParcelValue > 4 ? totalPay + entry : lote.price
-            handleSummary(valuePay, juros, "juro");
+            handleSummaryJuro();
         })
 
         containerPayment.classList.remove("none");
