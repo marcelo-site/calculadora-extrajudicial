@@ -234,11 +234,10 @@ form.entry.addEventListener("input", (e) => {
 });
 
 const submit = (number) => {
-    // e.preventDefault();
-    const { lote, price, entry, qtyParcel, uniquePay } = form;
+    const { lote, qtyParcel, uniquePay } = form;
     const countParcels = uniquePay.value === "1" ? 1 : Number(qtyParcel.value);
     const dataParcel = handleValueParcel()[+qtyParcel.value - 2];
-    const data = dataLotes[+lote.value];
+    const data = getLote();
     const text = textProposit({
         lote: Number(lote.value),
         price: data.price,
@@ -246,21 +245,16 @@ const submit = (number) => {
         qtyParcel: countParcels,
         percentDiscount,
         valueParcel: dataParcel.valueParcel,
-        entry: Number(entry.value.replace(/\D/g, "")) / 100,
+        entry: getEntry(true) / 100,
     });
     window.open(`https://wa.me/55${number}?text=${encodeURIComponent(text)}`, "_blank");
 }
-
 
 btnEnvProposit.forEach(item => {
     item.addEventListener("click", (e) => {
         submit(e.target.getAttribute("data-number"));
     })
 })
-
-form.addEventListener("submit", (e) => {
-
-});
 
 const handleModal = (modalEl) => {
     const toggleModal = () => modalEl.classList.toggle("none");
@@ -278,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     uniquePay.forEach((item) => item.addEventListener("click", handleMethod));
 
     document.querySelector("#yearCopy").innerHTML = (new Date()).getFullYear();
-    document.querySelector(".text-bottom span").innerHTML = `<b>${taxValue}%</b>`;
+    document.querySelector("#taxa").innerHTML = `${taxValue}%`;
 
     dataLotes.forEach(({ lote, available }) => {
         selectLote.innerHTML += `<option value="${lote}">Lote ${lote} ${!available ? "indisponivel" : ""}</option>`
