@@ -1,2 +1,0 @@
-# Calculadora-armotizacao
- Calculadora-armotizacao
