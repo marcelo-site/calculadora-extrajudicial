@@ -272,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     uniquePay.forEach((item) => item.addEventListener("click", handleMethod));
 
     document.querySelector("#yearCopy").innerHTML = (new Date()).getFullYear();
+    document.querySelector(".text-bottom span").innerHTML = `<b>${taxValue}%</b>`;
 
     dataLotes.forEach(({ lote, available }) => {
         selectLote.innerHTML += `<option value="${lote}">Lote ${lote} ${!available ? "indisponivel" : ""}</option>`
