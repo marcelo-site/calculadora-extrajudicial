@@ -8,15 +8,12 @@ import {
     getParamUrl,
     handleDiscount,
     handleURL,
-    percentDiscount
+    percentDiscount,
+    taxValue
 } from "./utils.js";
 
-// form
 const form = document.querySelector('#form');
-const selectLote = form.lote;
-const qtyParcel = form.qtyParcel;
-const uniquePay = form.uniquePay;
-const entry = form.entry
+const { lote: selectLote, entry, uniquePay, qtyParcel } = form
 
 const modal = document.querySelector("#modal");
 const modalLoteNot = document.querySelector("#notLote");
@@ -28,7 +25,6 @@ const envProposit = document.querySelector("#show-numbers");
 const containerNumbers = document.querySelector("#container-numbers");
 const btnEnvProposit = containerNumbers.querySelectorAll(".btn");
 
-const taxValue = 1.5
 const taxa = taxValue / 100;
 const maxParcel = 60;
 
@@ -42,8 +38,7 @@ const getLote = () => {
 const getEntry = (data) => {
     const entryValue = Number(entry.value.replace(/\D/g, "")) / 100;
     if (data) return entryValue;
-
-    return uniquePay.value === "1" ? 0 : entryValue
+    return uniquePay.value === "1" ? 0 : entryValue;
 }
 
 const handleValueParcel = () => {
@@ -51,10 +46,10 @@ const handleValueParcel = () => {
     if (!lote) return;
 
     const entry = getEntry(true);
-    let valueFinance = lote.price - entry;
+    const valueFinance = lote.price - entry;
     const dataArr = [];
-
-    for (let index = 2; index <= maxParcel; index++) {
+    let index = 2
+    for (; index <= maxParcel; index++) {
         const valueParcel = index <= 4 ?
             valueFinance / index :
             valueFinance * (Math.pow((1 + taxa), index) * taxa) / (Math.pow((1 + taxa), index) - 1);
@@ -82,8 +77,7 @@ const handleSummary = (price, variant, type) => {
 
     if (type === "discount") {
         summary.innerHTML = valuePay(variant, percentDiscount * 100)
-    }
-    else {
+    } else {
         const percent = calcularPercentagem(variant, price);
         summary.innerHTML = valuePay(variant, percent, "juro");
     }
@@ -109,16 +103,13 @@ const calcular = () => {
     const qtyParcelValue = qtyParcel.value;
     qtyParcel.innerHTML = ``
 
-    parcelas.forEach((item, i) => {
-        const { qty, valueParcel } = item;
+    parcelas.forEach(({ qty, valueParcel }) => {
         qtyParcel.innerHTML += `
             <option value="${qty}">${qty} parcelas de ${formatValue(valueParcel)}</option>`
     });
 
     qtyParcel.value = qtyParcelValue;
-    if (uniquePay.value === "0") {
-        handleSummaryJuro();
-    }
+    if (uniquePay.value === "0") handleSummaryJuro();
 }
 
 const emptyValues = () => {
@@ -148,9 +139,9 @@ const handleMethod = (e) => {
     uniquePay.forEach((item) =>
         item.parentNode.querySelector("label").classList.remove("active")
     );
+    e.target.parentNode
+        .querySelector("label").classList.add("active");
     calcular();
-    const parent = e.target.parentNode;
-    parent.querySelector("label").classList.add("active")
 }
 
 const handleEntry = () => {
@@ -165,25 +156,27 @@ const handleEntry = () => {
 }
 
 const handleLote = (n) => {
+    const empty = () => {
+        envProposit.classList.add("none");
+        selectLote.value = "";
+        valueTitle.innerHTML = "000,00";
+        emptyValues();
+    }
+    if (!n) return empty();
+
     const lote = dataLotes[n - 1];
     if (!lote) {
         emptyValues();
         envProposit.classList.add("none");
         return;
     }
-
     if (!lote.available) {
-        envProposit.classList.add("none");
         modalLoteNot.classList.remove("none");
-        selectLote.value = "";
-        emptyValues();
-        return;
+        return empty();
     }
     const qtyParcelValue = +qtyParcel.value;
-    valueTitle.innerHTML = formatPrice(lote.price);
-    form.price.value = lote.price;
+    valueTitle.innerHTML = formatValue(lote.price);
     const parcelas = handleValueParcel();
-
     handleEntry();
 
     parcelas?.forEach((item, i) => {
@@ -209,7 +202,7 @@ selectLote.addEventListener("change", ({ target }) => {
     handleURL("lote", target.value);
 });
 
-entry.addEventListener("input", (e) => {
+entry.addEventListener("input", () => {
     handleEntry();
     calcular();
 });
@@ -225,13 +218,13 @@ const submit = (number) => {
         qtyParcel: countParcels,
         percentDiscount,
         valueParcel: dataParcel.valueParcel,
-        entry: getEntry(true) / 100,
+        entry: getEntry(true),
     });
     window.open(`https://wa.me/55${number}?text=${encodeURIComponent(text)}`, "_blank");
 }
 
 btnEnvProposit.forEach(item => {
-    item.addEventListener("click", ({ e }) => {
+    item.addEventListener("click", ({ target }) => {
         submit(target.getAttribute("data-number"));
     })
 })

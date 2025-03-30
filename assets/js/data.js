@@ -110,18 +110,3 @@ export const dataLotes = [
     lote: 22
   }
 ]
-
-// const arr = []
-
-// for (let i = 0; i < 22; i++) {
-//   const value = i > 10 ? 13_000 : 16_000
-//   arr.push({
-//     name: `Lote ${i + 0}`,
-//     cpf: 999_999_999_9 + `${i + 1}`,
-//     price: value,
-//     available: true,
-//     lote: i + 1,
-//   })
-// }
-
-// console.log(arr)

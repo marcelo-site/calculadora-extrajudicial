@@ -1,4 +1,5 @@
-const percentDiscount = 0.05
+const percentDiscount = 0.05;
+const taxValue = 1.8
 
 const formatValue = (value) => {
   const valueCurrent = Math.abs(value)
@@ -18,7 +19,7 @@ const formatPrice = (value) => {
 const handleValueNum = (value) => {
   return parseFloat(value
     .replace(/\./g, '')
-    .replace(/\,/g, '.'))
+    .replace(/\,/g, '.'));
 }
 
 const handleDiscount = (value) => {
@@ -46,4 +47,4 @@ const getParamUrl = (key) => {
   return params.get(key)
 }
 
-export { formatValue, formatPrice, handleValueNum, handleDiscount, percentDiscount, calcularPercentagem, handleURL, getParamUrl }
+export { formatValue, formatPrice, handleValueNum, handleDiscount, percentDiscount, calcularPercentagem, handleURL, getParamUrl, taxValue }

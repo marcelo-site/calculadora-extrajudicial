@@ -8,18 +8,17 @@
 :root {
     --primary-color: #132ddb;
     --border-color: rgba(0, 0, 0, 0.25);
-    --color-green: green;
     --color-green: #28a757;
 }
 
 body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2em;
-    line-height: 1.5em;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
     padding: 0px 5px 20px 5px;
     background-color: #fff;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 #title-price {
@@ -95,7 +94,8 @@ form>div {
     max-width: 640px;
 }
 
-form label {
+form label,
+.label {
     display: block;
     font-weight: 500;
     font-size: 1em;
@@ -185,21 +185,6 @@ form button[type='submit'] {
     font-size: 1.25rem !important;
 }
 
-footer {
-    position: fixed;
-    text-align: center;
-    background-color: #414242;
-    color: white;
-    padding: 0.5em;
-    bottom: 0;
-    width: 100vw;
-}
-
-footer a {
-    text-decoration: none;
-    color: #db7a16;
-}
-
 .bold {
     font-weight: 600;
 }
@@ -259,23 +244,24 @@ footer a {
 
 .modal {
     position: fixed;
-    background: #00000087;
+    background: hsla(0, 0%, 0%, 0.6);
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+
+    &>div {
+        background: white;
+        width: 96%;
+        max-height: 80%;
+        max-width: 640px;
+        padding: 1rem;
+        position: relative;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
 }
 
-.modal>div {
-    background: white;
-    width: 90%;
-    max-height: 80%;
-    max-width: 640px;
-    padding: 1rem;
-    position: relative;
-    border-radius: 8px;
-    overflow-x: auto;
-}
 
 .modal button {
     background-color: red;
@@ -308,8 +294,25 @@ footer a {
 
 .modal p {
     font-size: 15px;
+    line-height: 1.75rem;
+    margin-top: 10px;
 }
 
 .modal p i {
     font-weight: 500;
+}
+
+footer {
+    position: fixed;
+    text-align: center;
+    background-color: #414242;
+    color: white;
+    padding: 0.5em;
+    bottom: 0;
+    width: 100vw;
+
+    a {
+        text-decoration: none;
+        color: #db7a16;
+    }
 }
