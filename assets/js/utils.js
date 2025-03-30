@@ -37,7 +37,13 @@ const handleURL = (key, param) => {
   params.set(key, param);
 
   history.replaceState({}, "", path.split("?")[0] + "?" + params);
-
 }
 
-export { formatValue, formatPrice, handleValueNum, handleDiscount, percentDiscount, calcularPercentagem, handleURL }
+const getParamUrl = (key) => {
+  const path = window.location.toString();
+  let url = new URL(path);
+  let params = new URLSearchParams(url.search);
+  return params.get(key)
+}
+
+export { formatValue, formatPrice, handleValueNum, handleDiscount, percentDiscount, calcularPercentagem, handleURL, getParamUrl }

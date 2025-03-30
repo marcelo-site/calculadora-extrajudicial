@@ -5,7 +5,9 @@ import {
     calcularPercentagem,
     formatPrice,
     formatValue,
+    getParamUrl,
     handleDiscount,
+    handleURL,
     percentDiscount
 } from "./utils.js";
 
@@ -35,9 +37,11 @@ showNumbers.addEventListener("click", () => containerNumbers.classList.remove("n
 
 const getLote = () => {
     const numLote = +form.lote.value;
-    if (!numLote) return;
+    return numLote ? dataLotes[numLote - 1] : undefined;
+}
 
-    return dataLotes[numLote - 1];
+const getUniquePay = () => {
+    return form.uniquePay.value
 }
 
 const getEntry = (data) => {
@@ -136,7 +140,9 @@ const calcular = () => {
     });
 
     qtyParcel.value = qtyParcelValue;
-    handleSummaryJuro();
+    if (form.uniquePay.value === "0") {
+        handleSummaryJuro();
+    }
 }
 
 const emptyValues = () => {
@@ -145,14 +151,10 @@ const emptyValues = () => {
 }
 
 const handleMethod = (e) => {
-    const valueMethod = e.target.value;
-
-    const numLote = +form.lote.value;
-    if (!numLote) return;
-
-    const lote = dataLotes[numLote - 1];
+    const lote = getLote();
     if (!lote) return;
 
+    const valueMethod = e.target.value;
     if (valueMethod === "0") {
         const qtyParcelValue = +form.qtyParcel.value;
         installment.classList.remove("none");
@@ -170,6 +172,7 @@ const handleMethod = (e) => {
     uniquePay.forEach((item) =>
         item.parentNode.querySelector("label").classList.remove("active")
     );
+    calcular();
     const parent = e.target.parentNode;
     parent.querySelector("label").classList.add("active")
 }
@@ -188,44 +191,49 @@ const handleEntry = () => {
     mascaraMoeda(entry);
 }
 
-loteEl.addEventListener("change", ({ target }) => {
-    const numLote = +target.value;
-    if (numLote) {
-        const qtyParcelValue = qtyParcel.value;
-        const lote = dataLotes[numLote - 1];
-
-        if (!lote.available) {
-            envProposit.classList.add("none");
-            modalLoteNot.classList.remove("none");
-            selectLote.value = "";
-            emptyValues();
-            return;
-        }
-        valueTitle.innerHTML = formatPrice(lote.price);
-        form.price.value = lote.price;
-        const parcelas = handleValueParcel();
-        handleEntry();
-
-        parcelas.forEach((item, i) => {
-            const { qty, valueParcel } = item;
-            if (i === 0) {
-                const { value, discount } = handleDiscount(lote.price);
-                handleSummary(value, discount, "discount");
-            }
-            qtyParcel.innerHTML += `
-            <option value="${qty}">${qty} parcelas de ${formatValue(valueParcel)}</option>`
-        });
-
-        qtyParcel.value = qtyParcelValue || 2
-        qtyParcel.addEventListener("change", handleSummaryJuro)
-
-        containerPayment.classList.remove("none");
-        envProposit.classList.remove("none");
-    }
-    else {
+const handleLote = (n) => {
+    const lote = dataLotes[n - 1];
+    if (!lote) {
         emptyValues();
-        envProposit.classList.add("none")
-    };
+        envProposit.classList.add("none");
+        return;
+    }
+
+    if (!lote.available) {
+        envProposit.classList.add("none");
+        modalLoteNot.classList.remove("none");
+        selectLote.value = "";
+        emptyValues();
+        return;
+    }
+    const qtyParcelValue = +qtyParcel.value;
+    valueTitle.innerHTML = formatPrice(lote.price);
+    form.price.value = lote.price;
+    const parcelas = handleValueParcel();
+
+    handleEntry();
+
+    parcelas?.forEach((item, i) => {
+        const { qty, valueParcel } = item;
+        if (i === 0) {
+            const { value, discount } = handleDiscount(lote.price);
+            handleSummary(value, discount, "discount");
+        }
+        qtyParcel.innerHTML += `
+            <option value="${qty}">${qty} parcelas de ${formatValue(valueParcel)}</option>`
+    });
+
+    qtyParcel.value = qtyParcelValue || 2
+    qtyParcel.addEventListener("change", handleSummaryJuro);
+
+    containerPayment.classList.remove("none");
+    envProposit.classList.remove("none");
+    calcular();
+}
+
+loteEl.addEventListener("change", ({ target }) => {
+    handleLote(+target.value);
+    handleURL("lote", target.value);
 });
 
 form.entry.addEventListener("input", (e) => {
@@ -276,5 +284,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     dataLotes.forEach(({ lote, available }) => {
         selectLote.innerHTML += `<option value="${lote}">Lote ${lote} ${!available ? "indisponivel" : ""}</option>`
-    })
+    });
+
+    const loteNum = getParamUrl("lote");
+    if (loteNum) {
+        loteEl.value = loteNum;
+        const { available } = getLote();
+
+        if (!available) loteEl.value = "";
+        else handleLote(+loteEl.value);
+    }
 });
