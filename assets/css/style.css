@@ -274,7 +274,6 @@ footer a {
     padding: 1rem;
     position: relative;
     border-radius: 8px;
-    /* overflow-y: hidden; */
     overflow-x: auto;
 }
 
@@ -309,7 +308,6 @@ footer a {
 
 .modal p {
     font-size: 15px;
-    font-weight: 300;
 }
 
 .modal p i {
