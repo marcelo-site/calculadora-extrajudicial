@@ -11,44 +11,39 @@ import {
     percentDiscount
 } from "./utils.js";
 
-const modal = document.querySelector("#modal");
-const modalLoteNot = document.querySelector("#notLote");
-const valueTitle = document.querySelector("#value-title");
+// form
 const form = document.querySelector('#form');
 const selectLote = form.lote;
 const qtyParcel = form.qtyParcel;
-const loteEl = form.lote;
 const uniquePay = form.uniquePay;
-const containerPayment = document.querySelector("#container-payment");
-const installment = document.querySelector("#container-installment");
-const summary = document.querySelector('#summary');
-const envProposit = document.querySelector(".btnZap");
-const taxValue = 1.5
-const taxa = taxValue / 100;
-const maxParcel = 60;
-let valueParcel = 0;
-let valueFinance = 0;
+const entry = form.entry
 
-const showNumbers = document.querySelector("#show-numbers");
+const modal = document.querySelector("#modal");
+const modalLoteNot = document.querySelector("#notLote");
+const valueTitle = document.querySelector("#value-title");
+const containerPayment = form.querySelector("#container-payment");
+const installment = containerPayment.querySelector("#container-installment");
+const summary = form.querySelector('#summary');
+const envProposit = document.querySelector("#show-numbers");
 const containerNumbers = document.querySelector("#container-numbers");
 const btnEnvProposit = containerNumbers.querySelectorAll(".btn");
 
-showNumbers.addEventListener("click", () => containerNumbers.classList.remove("none"));
+const taxValue = 1.5
+const taxa = taxValue / 100;
+const maxParcel = 60;
+
+envProposit.addEventListener("click", () => containerNumbers.classList.remove("none"));
 
 const getLote = () => {
-    const numLote = +form.lote.value;
+    const numLote = +selectLote.value;
     return numLote ? dataLotes[numLote - 1] : undefined;
 }
 
-const getUniquePay = () => {
-    return form.uniquePay.value
-}
-
 const getEntry = (data) => {
-    const entryValue = Number(form.entry.value.replace(/\D/g, "")) / 100;
+    const entryValue = Number(entry.value.replace(/\D/g, "")) / 100;
     if (data) return entryValue;
 
-    return form.uniquePay.value === "1" ? 0 : entryValue
+    return uniquePay.value === "1" ? 0 : entryValue
 }
 
 const handleValueParcel = () => {
@@ -56,41 +51,22 @@ const handleValueParcel = () => {
     if (!lote) return;
 
     const entry = getEntry(true);
-    let feesMonth = 0;
-    let balanceDebtor = 0;
-    valueFinance = lote.price - entry;
-    let valueAmortization = 0;
-
-    const arr = [];
+    let valueFinance = lote.price - entry;
+    const dataArr = [];
 
     for (let index = 2; index <= maxParcel; index++) {
-        let totalPay = 0;
-        valueParcel = index <= 4 ?
+        const valueParcel = index <= 4 ?
             valueFinance / index :
             valueFinance * (Math.pow((1 + taxa), index) * taxa) / (Math.pow((1 + taxa), index) - 1);
 
-        if (index === 0) {
-            feesMonth = valueFinance -
-                (valueFinance - (valueFinance * taxa));
-        }
-
-        if (totalPay) {
-            feesMonth = balanceDebtor * taxa;
-            balanceDebtor = balanceDebtor - (valueParcel - feesMonth);
-        } else {
-            balanceDebtor = valueFinance - (valueParcel - feesMonth);
-        }
-        valueAmortization = valueParcel - feesMonth;
-
-        arr.push({
+        dataArr.push({
             valueParcel,
             qty: index,
             totalPay: valueParcel * index,
             juros: (valueParcel * index) - valueFinance
         })
     }
-
-    return arr
+    return dataArr;
 }
 
 const handleSummary = (price, variant, type) => {
@@ -117,7 +93,7 @@ const handleSummaryJuro = () => {
     const lote = getLote();
     if (!lote) return;
 
-    const qtyParcelValue = +form.qtyParcel.value;
+    const qtyParcelValue = +qtyParcel.value;
     const entry = getEntry(true);
     const { totalPay, juros } = handleValueParcel()[qtyParcelValue - 2];
     const valuePay = qtyParcelValue > 4 ? totalPay + entry : lote.price;
@@ -126,11 +102,11 @@ const handleSummaryJuro = () => {
 }
 
 const calcular = () => {
-    const numLote = +form.lote.value;
+    const numLote = +selectLote.value;
     if (!numLote) return;
 
     const parcelas = handleValueParcel();
-    const qtyParcelValue = form.qtyParcel.value;
+    const qtyParcelValue = qtyParcel.value;
     qtyParcel.innerHTML = ``
 
     parcelas.forEach((item, i) => {
@@ -140,7 +116,7 @@ const calcular = () => {
     });
 
     qtyParcel.value = qtyParcelValue;
-    if (form.uniquePay.value === "0") {
+    if (uniquePay.value === "0") {
         handleSummaryJuro();
     }
 }
@@ -156,7 +132,7 @@ const handleMethod = (e) => {
 
     const valueMethod = e.target.value;
     if (valueMethod === "0") {
-        const qtyParcelValue = +form.qtyParcel.value;
+        const qtyParcelValue = +qtyParcel.value;
         installment.classList.remove("none");
         qtyParcel.value = qtyParcelValue || 2;
         containerPayment.classList.remove("none");
@@ -181,13 +157,10 @@ const handleEntry = () => {
     const lote = getLote();
     if (!lote) return;
 
-    const { price } = lote
-    const entry = form.entry
+    const { price } = lote;
     const value = entry.value.replace(/\D/g, "");
 
-    if (+value > price * 100) {
-        entry.value = price * 100
-    }
+    if (+value > price * 100) entry.value = price * 100;
     mascaraMoeda(entry);
 }
 
@@ -231,18 +204,17 @@ const handleLote = (n) => {
     calcular();
 }
 
-loteEl.addEventListener("change", ({ target }) => {
+selectLote.addEventListener("change", ({ target }) => {
     handleLote(+target.value);
     handleURL("lote", target.value);
 });
 
-form.entry.addEventListener("input", (e) => {
+entry.addEventListener("input", (e) => {
     handleEntry();
     calcular();
 });
 
 const submit = (number) => {
-    const { lote, qtyParcel, uniquePay } = form;
     const countParcels = uniquePay.value === "1" ? 1 : Number(qtyParcel.value);
     const dataParcel = handleValueParcel()[+qtyParcel.value - 2];
     const data = getLote();
@@ -259,8 +231,8 @@ const submit = (number) => {
 }
 
 btnEnvProposit.forEach(item => {
-    item.addEventListener("click", (e) => {
-        submit(e.target.getAttribute("data-number"));
+    item.addEventListener("click", ({ e }) => {
+        submit(target.getAttribute("data-number"));
     })
 })
 
@@ -288,10 +260,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const loteNum = getParamUrl("lote");
     if (loteNum) {
-        loteEl.value = loteNum;
+        selectLote.value = loteNum;
         const { available } = getLote();
 
-        if (!available) loteEl.value = "";
-        else handleLote(+loteEl.value);
+        if (!available) selectLote.value = "";
+        else handleLote(+selectLote.value);
     }
 });
