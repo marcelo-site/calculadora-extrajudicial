@@ -233,7 +233,7 @@ form button[type='submit'] {
 
 .targetOff.red i {
     transform: rotateX(180deg);
-    margin-top: -6px;
+    margin-top: -12px;
 }
 
 .text-bottom {
@@ -255,7 +255,7 @@ form button[type='submit'] {
         width: 96%;
         max-height: 80%;
         max-width: 640px;
-        padding: 1rem;
+        /* padding: 1rem; */
         position: relative;
         border-radius: 8px;
         overflow-x: auto;
@@ -277,8 +277,11 @@ form button[type='submit'] {
 
 .modal .title {
     font-size: 1.25rem;
-    margin-bottom: 1rem;
     font-weight: 500;
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    background: white;
 }
 
 .modal .title i {
@@ -295,7 +298,7 @@ form button[type='submit'] {
 .modal p {
     font-size: 15px;
     line-height: 1.75rem;
-    margin-top: 10px;
+    padding: .5rem 1rem;
 }
 
 .modal p i {
